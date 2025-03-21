@@ -1,20 +1,38 @@
+body {
+    height: 100vh;
+    background-color: #7F25FB;
+}
+
 .admin-container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
+    padding: 30px;
+    font-family: 'Roboto', sans-serif;
+    background-color: #081028;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
     text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 22px;
+    color: #ffffff;
     margin-bottom: 20px;
+    font-weight: 500;
 }
 
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 20px;
+    margin-bottom: 25px;
 }
 
 .input-group {
@@ -22,53 +40,240 @@ h2 {
     flex-direction: column;
 }
 
-.input-group label {
+.input-group input[name="nome"] {
+    padding: 10px;
+    border: 1px solid #5A5E7A;
+    border-radius: 8px;
+    width: 50%;
     font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 5px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-group input,
-.input-group select,
-.input-group textarea {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 100%;
+.input-group input[name="telefone"] {
+    padding: 10px;
+    border: 1px solid #5A5E7A;
+    border-radius: 8px;
+    width: 30%;
+    font-size: 14px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[name="tipo_negocio"] {
+    padding: 10px;
+    border: 1px solid #5A5E7A;
+    border-radius: 8px;
+    width: 40%;
+    font-size: 14px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[name="cnpj_cpf"] {
+    padding: 10px;
+    border: 1px solid #5A5E7A;
+    border-radius: 8px;
+    width: 35%;
+    font-size: 14px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[name="email"] {
+    padding: 10px;
+    border: 1px solid #5A5E7A;
+    border-radius: 8px;
+    width: 50%;
+    font-size: 14px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[name="proprietario"] {
+    padding: 10px;
+    border: 1px solid #5A5E7A;
+    border-radius: 8px;
+    width: 50%;
+    font-size: 14px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[name="localizacao"] {
+    padding: 10px;
+    border: 1px solid #5A5E7A;
+    border-radius: 8px;
+    width: 50%;
+    font-size: 14px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hora-funcionamento input[type="time"] {
+    margin-top: 10px;
+    margin-left: 15px;
+    margin-right: 15px;
+    border-radius: 3px;
+    background-color: #252545;
+    border: 1px solid #5A5E7A;
+    padding: 3px;
+    cursor: pointer;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #9A9DAA;
+    margin-bottom: 8px;
+}
+
+.formas-pagamento {
+    color: #ffffff;
+}
+
+.input-group select {
+    padding: 10px;
+    border: 1px solid #5A5E7A;
+    border-radius: 8px;
+    width: 30%;
+    max-width: 400px; 
+    font-size: 14px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #8757E6;
+    outline: none;
 }
 
 .checkbox-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);  
+    gap: 15px;
+    margin-top: 20px;
+    margin-bottom: 25px;
 }
 
 .checkbox-group label {
+    width: 50%;
+    white-space: nowrap;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    font-size: 14px;
+    color: #9A9DAA;
+    cursor: pointer;
+    background-color: #252545;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #5A5E7A;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.instagram, .whatsApp, .site, .description, .logo-url {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    color: #B0B3C0;
+}
+
+input[name="instagram"],
+input[name="whatsapp"],
+input[name="site"],
+input[name="logo_url"] {
+    padding: 10px;
+    border: 1px solid #5A5E7A;
+    border-radius: 8px;
+    width: 50%;
+    font-size: 14px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[name="instagram"]:focus,
+input[name="whatsapp"]:focus,
+input[name="site"]:focus,
+input[name="logo_url"]:focus,
+textarea[name="descricao"]:focus,
+textarea[name="observacoes"]:focus {
+    border-color: #8757E6;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+
+textarea[name="descricao"],
+textarea[name="observacoes"] {
+    padding: 2rem;
+    border: 1px solid #5A5E7A   ;
+    border-radius: 8px;
+    width: 60%;
+    font-size: 14px;
+    color: #B0B3C0;
+    background-color: #252545;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.criar-empresa {
+    display: flex;
+    justify-content: center; 
 }
 
 .button-submit {
     width: 100%;
-    padding: 10px;
-    background-color: #007bff;
+    max-width: 400px; 
+    padding: 14px;
+    background-color: #5A33FF;
     color: white;
-    font-weight: bold;
+    font-weight: 600;
+    border-radius: 8px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
 }
 
 .button-submit:hover {
-    background-color: #0056b3;
+    background-color: #3D1EB8;
+    transform: translateY(-2px);
+}
+
+.button-submit:active {
+    transform: translateY(0);
 }
 
 .empresa-list {
-    margin-top: 20px;
-    border-top: 2px solid #ccc;
-    padding-top: 10px;
+    margin-top: 30px;
+    border-top: 2px solid #e0e0e0;
+    padding-top: 20px;
+}
+
+.empresa-list h3 {
+    font-size: 22px;
+    color: #34495e;
+    margin-bottom: 15px;
 }
 
 .empresa-list ul {
@@ -77,6 +282,23 @@ h2 {
 }
 
 .empresa-list li {
-    padding: 10px;
-    border-bottom: 1px solid #ddd;
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 14px;
+    color: #555;
+    transition: background-color 0.3s ease;
+}
+
+.empresa-list li:hover {
+    background-color: #f9f9f9;
+}
+
+.empresa-list li strong {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.empresa-list li span {
+    color: #007bff;
+    font-weight: 500;
 }

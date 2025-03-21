@@ -114,14 +114,16 @@ const AdminDashboard = () => {
                 </div>
                 <div className="input-group">
                     <label>Horário de Funcionamento *</label>
-                    <div>
+                    <div className='hora-funcionamento'>
+                        <label>Abertura:</label>
                         <input type="time" name="horario_abertura" onChange={handleInputChange} />
+                        <label>Fechamento:</label>
                         <input type="time" name="horario_fechamento" onChange={handleInputChange} />
                     </div>
                 </div>
             </div>
 
-            <label>Formas de Pagamento *</label>
+            <label className="formas-pagamento">Formas de Pagamento *</label>
             <div className="checkbox-group">
                 {["Pix", "Cartão de Crédito", "Cartão de Débito", "Boleto", "Dinheiro", "Transferência Bancária"].map(metodo => (
                     <label key={metodo}>
@@ -154,33 +156,35 @@ const AdminDashboard = () => {
 
             <h3>Campos Opcionais</h3>
             <div className="form-grid">
-                <div className="input-group">
+                <div className="instagram">
                     <label>Instagram</label>
                     <input name="instagram" onChange={handleInputChange} />
                 </div>
-                <div className="input-group">
+                <div className="whatsApp">
                     <label>WhatsApp</label>
                     <input name="whatsapp" onChange={handleInputChange} />
                 </div>
-                <div className="input-group">
+                <div className="site">
                     <label>Site</label>
                     <input name="site" onChange={handleInputChange} />
                 </div>
-                <div className="input-group">
+                <div className="description">
                     <label>Descrição</label>
                     <textarea name="descricao" onChange={handleInputChange}></textarea>
                 </div>
-                <div className="input-group">
+                <div className="logo-url">
                     <label>Logo URL</label>
                     <input name="logo_url" onChange={handleInputChange} />
                 </div>
-                <div className="input-group">
+                <div className="description">
                     <label>Observações</label>
                     <textarea name="observacoes" onChange={handleInputChange}></textarea>
                 </div>
             </div>
 
-            <button className="button-submit" onClick={criarEmpresa}>Criar Empresa</button>
+            <div className="criar-empresa">
+                <button className="button-submit" onClick={criarEmpresa}>Criar Empresa</button>
+            </div>
 
             <div className="empresa-list">
                 <h3>Empresas Cadastradas</h3>
