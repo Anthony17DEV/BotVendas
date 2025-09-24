@@ -1,67 +1,88 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import apiService from '../services/apiService';
+import { authService } from '../services/authService';
+import { FiLogIn, FiLock, FiMail } from 'react-icons/fi';
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    const [mensagem, setMensagem] = useState("");
-    const navigate = useNavigate(); // Para redirecionamento
+    const [notification, setNotification] = useState({ type: '', message: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setMensagem("");
+        setIsSubmitting(true);
+        setNotification({ type: '', message: '' });
 
         try {
-            const response = await fetch("http://localhost:5000/api/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, senha }),
-            });
+            const result = await apiService.login(email, senha);
+            
+            authService.login(result.usuario, result.token);
 
-            const data = await response.json();
-
-            if (response.ok) {
-                setMensagem("Login realizado com sucesso!");
-                console.log("Usuário logado:", data.usuario);
-
-                // Salvar no localStorage para persistência
-                localStorage.setItem("usuario", JSON.stringify(data.usuario));
-
-                // Redirecionar para o dashboard
-                navigate("/dashboard");
-            } else {
-                setMensagem(data.error || "Erro ao fazer login");
-            }
+            navigate("/dashboard");
         } catch (error) {
-            setMensagem("Erro de conexão com o servidor");
+            setNotification({ type: 'error', message: error.message || "Erro de conexão com o servidor" });
+            setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
-            <h2 className="text-2xl font-bold mb-4">Login</h2>
-            <form onSubmit={handleLogin} className="flex flex-col w-80 bg-white p-6 rounded-xl shadow-lg">
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="border p-2 rounded mb-3"
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Senha"
-                    value={senha}
-                    onChange={(e) => setSenha(e.target.value)}
-                    className="border p-2 rounded mb-3"
-                    required
-                />
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition">
-                    Entrar
-                </button>
-                {mensagem && <p className="text-red-500 mt-3">{mensagem}</p>}
-            </form>
+        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+            <div className="w-full max-w-md">
+                <div className="text-center mb-8">
+                    <h1 className="text-4xl font-bold text-slate-50">Bot<span className="text-sky-400">Vendas</span></h1>
+                    <p className="mt-2 text-slate-400">Acesse seu painel de gerenciamento.</p>
+                </div>
+
+                <div className="bg-slate-800 border border-slate-700 shadow-lg rounded-lg p-8">
+                    {notification.message && (
+                        <div className={`p-4 mb-4 rounded-md text-sm text-center ${
+                            notification.type === 'success' ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
+                        }`}>
+                            {notification.message}
+                        </div>
+                    )}
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="relative">
+                            <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input
+                                type="email"
+                                placeholder="Email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="form-input pl-10" 
+                                required
+                            />
+                        </div>
+                        <div className="relative">
+                            <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <input
+                                type="password"
+                                placeholder="Senha"
+                                value={senha}
+                                onChange={(e) => setSenha(e.target.value)}
+                                className="form-input pl-10"
+                                required
+                            />
+                        </div>
+                        <div className="text-right text-sm">
+                            <Link to="/solicitar-recuperacao" className="font-medium text-sky-400 hover:text-sky-500 transition-colors">
+                                Esqueceu a senha?
+                            </Link>
+                        </div>
+                        <button 
+                            type="submit" 
+                            className="button-submit w-full flex items-center justify-center gap-2"
+                            disabled={isSubmitting}
+                        >
+                            <FiLogIn />
+                            {isSubmitting ? 'Entrando...' : 'Entrar'}
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 };

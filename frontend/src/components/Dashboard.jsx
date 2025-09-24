@@ -1,103 +1,107 @@
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { authService } from '../services/authService';
+import apiService from '../services/apiService';
+import { FiBox, FiClipboard, FiLogOut, FiTrendingUp } from 'react-icons/fi';
 import './Dashboard.css';
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
     const [usuario, setUsuario] = useState(null);
-    const [produtos, setProdutos] = useState([]);
-    const [quantidadeTotal, setQuantidadeTotal] = useState(0);
-    const [indiceProduto, setIndiceProduto] = useState(0);
+    const [dashboardData, setDashboardData] = useState(null);
     const [horaAtual, setHoraAtual] = useState(new Date());
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null); 
     const navigate = useNavigate();
 
     useEffect(() => {
-        const usuarioLogado = localStorage.getItem("usuario");
-
-        if (!usuarioLogado) {
-            navigate("/login");
-        } else {
-            const user = JSON.parse(usuarioLogado);
-            setUsuario(user);
-
-            fetch(`/api/estoque?banco_dados=${user.banco_dados}`)
-                .then(res => res.json())
-                .then(data => {
-                    if (data?.dados?.length) {
-                        setProdutos(data.dados);
-
-                        const soma = data.dados.reduce((acc, item) => acc + (Number(item.quantidade) || 0), 0);
-                        setQuantidadeTotal(soma);
-                    }
-                })
-                .catch(err => console.error("Erro ao buscar estoque:", err));
+        if (!authService.isAuthenticated()) {
+            navigate('/login');
+            return;
         }
+
+        const currentUser = authService.getCurrentUser();
+        setUsuario(currentUser);
+
+        const fetchData = async () => {
+            try {
+                setError(null);
+                const result = await apiService.getDashboardResumo();
+                setDashboardData(result.data);
+            } catch (error) {
+                console.error("Erro ao buscar dados do dashboard:", error);
+                setError("Não foi possível carregar os dados do painel. Verifique sua conexão ou tente novamente mais tarde.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
     }, [navigate]);
 
     useEffect(() => {
-        if (produtos.length > 1) {
-            const interval = setInterval(() => {
-                setIndiceProduto((prev) => (prev + 1) % produtos.length);
-            }, 4000);
-            return () => clearInterval(interval);
-        }
-    }, [produtos]);
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setHoraAtual(new Date());
-        }, 1000);
+        const timer = setInterval(() => setHoraAtual(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
-
+    
     const handleLogout = () => {
-        localStorage.removeItem("usuario");
-        navigate("/login");
+        authService.logout();
+        navigate('/login');
     };
 
-    if (!usuario) {
-        return <p>Carregando...</p>;
+    if (isLoading) {
+        return <div className="loading-container">Carregando Dashboard...</div>;
     }
 
     return (
         <div className="dashboard-container">
-            <h2 className="dashboard-title">Bem-vindo, {usuario.proprietario}!</h2>
-            <p className="dashboard-subtitle">Loja: {usuario.nome}</p>
-            <p className="dashboard-clock">{horaAtual.toLocaleTimeString()}</p>
+            <header className="dashboard-header">
+                <div>
+                    <h2 className="dashboard-title">Bem-vindo, {usuario?.nome}!</h2>
+                    <p className="dashboard-subtitle">Painel de Controle da {usuario?.nome_empresa}</p>
+                </div>
+                <div className="dashboard-clock">
+                    {horaAtual.toLocaleDateString()} - {horaAtual.toLocaleTimeString()}
+                </div>
+            </header>
 
-            <div className="indicadores">
+            {error && (
+                <div className="notification error" style={{ marginBottom: '2.5rem' }}>
+                    {error}
+                </div>
+            )}
+
+            <div className="indicadores-grid">
                 <div className="indicador-card">
-                    <h4>Produto em Destaque</h4>
-                    <p>{produtos[indiceProduto]?.nome || "-"}</p>
-                    <small>{produtos[indiceProduto]?.quantidade || 0} unidades</small>
+                    <FiBox className="indicador-icon" />
+                    <h4>Total de Produtos</h4>
+                    <p>{dashboardData?.totalProdutos ?? '--'}</p>
                 </div>
                 <div className="indicador-card">
-                    <h4>Total de Itens</h4>
-                    <p>{quantidadeTotal}</p>
+                    <FiTrendingUp className="indicador-icon" />
+                    <h4>Itens em Estoque</h4>
+                    <p>{dashboardData?.totalQuantidade ?? '--'}</p>
+                </div>
+                <div className="indicador-card">
+                    <FiClipboard className="indicador-icon" />
+                    <h4>Pedidos Hoje</h4>
+                    <p>--</p> 
                 </div>
             </div>
 
-            <div className="dashboard-buttons">
-                <button
-                    onClick={() => navigate("/pedidos")}
-                    className="dashboard-button pedidos"
-                >
-                    Ver Pedidos
+            <nav className="dashboard-nav">
+                <button onClick={() => navigate('/pedidos')} className="dashboard-button primary">
+                    <FiClipboard /> Ver Pedidos
                 </button>
-
-                <button
-                    onClick={() => navigate("/estoque")}
-                    className="dashboard-button estoque"
-                >
-                    Ver Estoque
+                <button onClick={() => navigate('/estoque')} className="dashboard-button secondary">
+                    <FiBox /> Gerenciar Estoque
                 </button>
-            </div>
+            </nav>
 
-            <button
-                onClick={handleLogout}
-                className="dashboard-button sair"
-            >
-                Sair
-            </button>
+            <footer className="dashboard-footer">
+                <button onClick={handleLogout} className="dashboard-button danger">
+                    <FiLogOut /> Sair
+                </button>
+            </footer>
         </div>
     );
 };

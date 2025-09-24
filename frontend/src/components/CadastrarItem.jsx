@@ -1,87 +1,120 @@
-import './CadastrarItem.css';
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import apiService from '../services/apiService';
+import './CadastrarItem.css'; 
 
 const CadastrarItem = () => {
     const [camposEstoque, setCamposEstoque] = useState([]);
-    const [novoItem, setNovoItem] = useState({});
+    const [itemData, setItemData] = useState({});
     const [imagem, setImagem] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [notification, setNotification] = useState({ type: '', message: '' });
     const navigate = useNavigate();
 
     useEffect(() => {
-        const usuario = JSON.parse(localStorage.getItem("usuario"));
-        if (usuario?.banco_dados) {
-            fetch(`http://localhost:5000/api/estoque/campos?banco_dados=${usuario.banco_dados}`)
-                .then(res => res.json())
-                .then(data => setCamposEstoque(data))
-                .catch(err => console.error("Erro ao buscar campos do estoque:", err));
-        }
+        const fetchCampos = async () => {
+            try {
+                const result = await apiService.getEstoqueCampos();
+                setCamposEstoque(result.data || []);
+            } catch (err) {
+                setNotification({ type: 'error', message: err.message });
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchCampos();
     }, []);
 
-    const handleCadastro = async () => {
-        const usuario = JSON.parse(localStorage.getItem("usuario"));
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setItemData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setNotification({ type: '', message: '' });
+
         const formData = new FormData();
-
-        // Adiciona campos dinâmicos
-        Object.keys(novoItem).forEach(chave => {
-            formData.append(chave, novoItem[chave]);
-        });
-
-        // Adiciona banco e imagem
-        formData.append("banco_dados", usuario.banco_dados);
+        for (const key in itemData) {
+            formData.append(key, itemData[key]);
+        }
         if (imagem) {
-            formData.append("imagem", imagem);
+            formData.append('imagem', imagem);
         }
 
         try {
-            const response = await fetch("http://localhost:5000/api/estoque", {
-                method: "POST",
-                body: formData
-            });
-
-            if (response.ok) {
-                navigate("/estoque");
-            } else {
-                console.error("Erro ao cadastrar item");
-            }
-        } catch (error) {
-            console.error("Erro na requisição de cadastro:", error);
+            await apiService.createEstoqueItem(formData);
+            setNotification({ type: 'success', message: 'Item cadastrado com sucesso! Redirecionando...' });
+            setTimeout(() => navigate('/estoque'), 2000);
+        } catch (err) {
+            setNotification({ type: 'error', message: err.message });
+            setIsSubmitting(false);
         }
     };
+    
+    const formatLabel = (text) => {
+        return text.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+    };
+
+    const renderInput = (campo) => {
+        const tipoLower = campo.tipo.toLowerCase();
+        
+        if (tipoLower.startsWith('enum')) {
+            const options = tipoLower.replace(/enum\(|\)|\'/g, '').split(',');
+            return (
+                <select name={campo.nome} onChange={handleChange} defaultValue="" className="form-select" required>
+                    <option value="" disabled>Selecione...</option>
+                    {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                </select>
+            );
+        }
+        if (tipoLower.startsWith('boolean')) {
+            return <input type="checkbox" name={campo.nome} onChange={e => handleChange({ target: { name: e.target.name, value: e.target.checked }})} className="form-checkbox"/>
+        }
+        if (tipoLower.startsWith('text')) {
+            return <textarea name={campo.nome} onChange={handleChange} className="form-textarea" rows="3" />
+        }
+        
+        const inputType = tipoLower.includes('int') || tipoLower.includes('decimal') ? 'number' : 'text';
+        return <input type={inputType} name={campo.nome} onChange={handleChange} className="form-input" required />;
+    }
+
+    if (isLoading) {
+        return <div className="loading-container">Carregando formulário...</div>;
+    }
 
     return (
         <div className="cadastrar-container">
-          <h2>Cadastrar Novo Item</h2>
-      
-          <div className="cadastrar-card">
-            {camposEstoque.map((campo, index) => (
-              <input
-                key={index}
-                type={campo.tipo.includes("int") || campo.tipo.includes("decimal") ? "number" : "text"}
-                placeholder={campo.nome}
-                value={novoItem[campo.nome] || ""}
-                onChange={(e) =>
-                  setNovoItem({ ...novoItem, [campo.nome]: e.target.value })
-                }
-              />
-            ))}
-      
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => setImagem(e.target.files[0])}
-            />
-      
-            <button onClick={handleCadastro} className="btn-verde">
-              Cadastrar Item
+            <form onSubmit={handleSubmit} className="cadastrar-card">
+                <h2>Cadastrar Novo Item</h2>
+                
+                {notification.message && <div className={`notification ${notification.type}`}>{notification.message}</div>}
+                
+                <div className="form-grid">
+                    {camposEstoque.map((campo) => (
+                        <div key={campo.nome} className="input-group">
+                            <label htmlFor={campo.nome}>{formatLabel(campo.nome)}</label>
+                            {renderInput(campo)}
+                        </div>
+                    ))}
+                    <div className="input-group">
+                        <label htmlFor="imagem">Imagem do Produto</label>
+                        <input id="imagem" name="imagem" type="file" accept="image/*" onChange={(e) => setImagem(e.target.files[0])} className="form-input-file" />
+                    </div>
+                </div>
+
+                <button type="submit" className="button-submit" disabled={isSubmitting}>
+                    {isSubmitting ? 'Cadastrando...' : 'Cadastrar Item'}
+                </button>
+            </form>
+
+            <button onClick={() => navigate('/estoque')} className="button-link-voltar">
+                Voltar ao Estoque
             </button>
-          </div>
-      
-          <button onClick={() => navigate("/estoque")} className="btn-voltar">
-            Voltar ao Estoque
-          </button>
         </div>
-      );      
+    );
 };
 
 export default CadastrarItem;

@@ -1,142 +1,131 @@
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(to bottom, #7e22ce, #312e81);
-    color: #fff;
-}
-
-.pedidos-container {
+.container-pedidos {
     padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    min-height: 100vh;
+    background-color: var(--cor-fundo-body, #0f172a);
 }
 
-.pedidos-container h2 {
-    text-align: center;
-    font-size: 2rem;
+.pedidos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
-.pedidos-tabela table {
+.container-tabela {
+    width: 100%;
+    overflow-x: auto;
+    background-color: var(--cor-fundo-container, #1e293b);
+    border-radius: var(--raio-borda, 8px);
+    border: 1px solid var(--cor-borda, #475569);
+    padding: 1rem;
+}
+
+.tabela-pedidos {
     width: 100%;
     border-collapse: collapse;
-    background-color: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    overflow: hidden;
-    backdrop-filter: blur(6px);
+    color: var(--cor-texto-corpo, #cbd5e1);
 }
 
-.pedidos-tabela th,
-.pedidos-tabela td {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 12px;
+.tabela-pedidos th,
+.tabela-pedidos td {
+    padding: 1rem 1.25rem;
     text-align: left;
+    white-space: nowrap;
 }
 
-.pedidos-tabela th {
-    background-color: rgba(255, 255, 255, 0.1);
-    font-weight: 600;
-    text-transform: capitalize;
+.tabela-pedidos th {
+    background-color: var(--cor-fundo-input, #334155);
+    color: var(--cor-texto-titulo, #f8fafc);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
 }
 
-.pedidos-tabela td pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
+.tabela-pedidos tbody tr {
+    border-bottom: 1px solid var(--cor-borda, #475569);
+    transition: background-color 0.2s ease;
 }
 
-.pedidos-tabela button {
-    margin: 4px 0.3rem;
-    padding: 6px 10px;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.tabela-pedidos tbody tr:last-child {
+    border-bottom: none;
 }
 
-.botao-aprovar {
-    background-color: #22c55e;
-    color: #fff;
-}
-.botao-aprovar:hover {
-    background-color: #16a34a;
+.tabela-pedidos tbody tr:hover {
+    background-color: var(--cor-fundo-input, #334155);
 }
 
-.botao-cancelar {
-    background-color: #ef4444;
-    color: #fff;
-}
-.botao-cancelar:hover {
-    background-color: #dc2626;
+.tabela-pedidos td {
+    font-size: 0.9rem;
 }
 
-.modal-cancelamento {
-    background-color: #1e1b4b;
-    border: 2px solid #fff;
-    padding: 2rem;
-    margin-top: 2rem;
-    border-radius: 8px;
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
+.tabela-pedidos td[colspan] {
     text-align: center;
+    padding: 3rem;
+    color: var(--cor-texto-label, #94a3b8);
 }
 
-.modal-cancelamento textarea {
-    width: 100%;
-    padding: 1rem;
-    border-radius: 6px;
-    border: none;
-    resize: vertical;
-    min-height: 100px;
-    margin-bottom: 1rem;
-    font-family: inherit;
-}
-
-.modal-cancelamento button {
-    margin: 0 0.5rem;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
     font-weight: 600;
-    border: none;
-    cursor: pointer;
+    font-size: 0.75rem;
+    text-transform: uppercase;
 }
+.status-pendente { background-color: #f59e0b; color: #1e293b; }
+.status-confirmado { background-color: var(--cor-sucesso, #22c55e); color: #fff; }
+.status-preparo { background-color: var(--cor-primaria, #38bdf8); color: #1e293b; }
+.status-entregue { background-color: var(--cor-borda, #475569); color: #fff; }
+.status-cancelado { background-color: var(--cor-erro, #ef4444); color: #fff; }
+.status-default { background-color: #64748b; color: #fff; }
 
-.modal-cancelamento button:first-of-type {
-    background-color: #ef4444;
-    color: #fff;
+.acoes-tabela { display: flex; gap: 0.75rem; }
+.botao-acao.confirmar { background-color: var(--cor-sucesso, #22c55e); }
+.botao-acao.cancelar { background-color: var(--cor-erro, #ef4444); }
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
-
-.modal-cancelamento button:last-of-type {
-    background-color: #64748b;
-    color: #fff;
+.modal-content {
+    background-color: var(--cor-fundo-container, #1e293b);
+    padding: 2rem;
+    border-radius: var(--raio-borda, 8px);
+    width: 90%;
+    max-width: 600px;
+    border: 1px solid var(--cor-borda, #475569);
 }
-
-@media screen and (max-width: 768px) {
-    .pedidos-tabela table,
-    .pedidos-tabela thead,
-    .pedidos-tabela tbody,
-    .pedidos-tabela th,
-    .pedidos-tabela td,
-    .pedidos-tabela tr {
-        display: block;
-    }
-
-    .pedidos-tabela th {
-        display: none;
-    }
-
-    .pedidos-tabela td {
-        border: none;
-        padding: 0.8rem 1rem;
-        position: relative;
-        text-align: left;
-    }
-
-    .pedidos-tabela td::before {
-        content: attr(data-label);
-        font-weight: bold;
-        display: block;
-        margin-bottom: 5px;
-    }
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--cor-borda, #475569);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    color: var(--cor-texto-titulo, #f8fafc);
+}
+.modal-close-button {
+    background: none; border: none; font-size: 1.5rem; color: var(--cor-texto-label); cursor: pointer;
+}
+.lista-itens-modal {
+    list-style: none; padding: 0; margin-top: 0.5rem;
+}
+.lista-itens-modal li {
+    padding: 0.5rem 0; border-bottom: 1px dashed var(--cor-borda);
+}
+.lista-itens-modal li span {
+    float: right; font-weight: 600;
+}
+.total-modal {
+    text-align: right; font-size: 1.2rem; font-weight: bold; margin-top: 1rem; color: var(--cor-texto-titulo);
+}
+.modal-footer {
+    display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;
 }

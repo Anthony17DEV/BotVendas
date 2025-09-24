@@ -1,63 +1,120 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
+import apiService from '../services/apiService';
+import { FiLock, FiCheckCircle, FiAlertTriangle } from 'react-icons/fi';
 
 const DefinirSenha = () => {
     const [novaSenha, setNovaSenha] = useState('');
     const [confirmarSenha, setConfirmarSenha] = useState('');
-    const [mensagem, setMensagem] = useState('');
-    const [token, setToken] = useState('');
-    const [banco, setBanco] = useState('');
+    const [notification, setNotification] = useState({ type: '', message: '' });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [success, setSuccess] = useState(false);
+    
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get('token');
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        setToken(urlParams.get('token') || '');
-        setBanco(urlParams.get('banco') || '');
-    }, []);
+        if (!token) {
+            setNotification({ type: 'error', message: 'Token de redefinição não encontrado na URL.' });
+        }
+    }, [token]);
 
-    const handleDefinirSenha = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setNotification({ type: '', message: '' });
+
         if (!novaSenha || !confirmarSenha) {
-            setMensagem('Preencha os dois campos.');
+            setNotification({ type: 'error', message: 'Por favor, preencha os dois campos.' });
             return;
         }
-
+        if (novaSenha.length < 6) {
+            setNotification({ type: 'error', message: 'A senha deve ter no mínimo 6 caracteres.' });
+            return;
+        }
         if (novaSenha !== confirmarSenha) {
-            setMensagem('As senhas não coincidem.');
+            setNotification({ type: 'error', message: 'As senhas não coincidem.' });
             return;
         }
 
-        const response = await fetch('http://localhost:5000/api/recovery/definir-senha', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ token, banco, novaSenha }),
-        });
-
-        const data = await response.json().catch(() => null);
-
-        console.log('Resposta da API:', response.status, data);
-
-        if (response.ok) {
-            setMensagem('Senha redefinida com sucesso! Você pode fazer login agora.');
-        } else {
-            setMensagem(`Erro ao redefinir senha: ${data?.error || 'Erro desconhecido'}`);
+        setIsSubmitting(true);
+        try {
+            const result = await apiService.resetPassword(token, novaSenha);
+            setNotification({ type: 'success', message: result.message });
+            setSuccess(true); 
+        } catch (error) {
+            setNotification({ type: 'error', message: error.message });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
     return (
-        <div>
-            <h2>Definir Nova Senha</h2>
-            <input
-                type="password"
-                placeholder="Digite sua nova senha"
-                value={novaSenha}
-                onChange={(e) => setNovaSenha(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Confirme sua nova senha"
-                value={confirmarSenha}
-                onChange={(e) => setConfirmarSenha(e.target.value)}
-            />
-            <button onClick={handleDefinirSenha}>Salvar Senha</button>
-            <p>{mensagem}</p>
+        <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-4">
+            <div className="w-full max-w-md">
+                <div className="bg-slate-800 border border-slate-700 shadow-lg rounded-lg p-8">
+                    <div className="text-center mb-6">
+                        <FiLock className="mx-auto h-12 w-12 text-sky-400" />
+                        <h2 className="mt-4 text-3xl font-bold text-slate-50">
+                            Definir Nova Senha
+                        </h2>
+                        <p className="mt-2 text-sm text-slate-400">
+                            Escolha uma senha forte e segura para proteger sua conta.
+                        </p>
+                    </div>
+
+                    {notification.message && (
+                        <div className={`p-4 mb-4 rounded-md text-sm ${
+                            notification.type === 'success' ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'
+                        }`}>
+                            {notification.message}
+                        </div>
+                    )}
+
+                    {success ? (
+                        <div className="text-center">
+                            <FiCheckCircle className="mx-auto h-10 w-10 text-green-400 mb-4" />
+                            <p className="text-slate-300">Sua senha foi alterada com sucesso.</p>
+                            <Link to="/login" className="mt-6 inline-block w-full px-4 py-3 bg-sky-500 text-white font-semibold rounded-lg hover:bg-sky-600 transition-colors duration-300">
+                                Ir para o Login
+                            </Link>
+                        </div>
+                    ) : (
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="input-group">
+                                <label htmlFor="nova-senha" className="block text-sm font-medium text-slate-400 mb-2">Nova Senha</label>
+                                <input
+                                    id="nova-senha"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={novaSenha}
+                                    onChange={(e) => setNovaSenha(e.target.value)}
+                                    className="form-input"
+                                    disabled={!token}
+                                />
+                            </div>
+                            <div className="input-group">
+                                <label htmlFor="confirmar-senha" className="block text-sm font-medium text-slate-400 mb-2">Confirmar Nova Senha</label>
+                                <input
+                                    id="confirmar-senha"
+                                    type="password"
+                                    placeholder="••••••••"
+                                    value={confirmarSenha}
+                                    onChange={(e) => setConfirmarSenha(e.target.value)}
+                                    className="form-input"
+                                    disabled={!token}
+                                />
+                            </div>
+                            <button 
+                                type="submit" 
+                                className="button-submit w-full"
+                                disabled={isSubmitting || !token}
+                            >
+                                {isSubmitting ? 'Salvando...' : 'Salvar Nova Senha'}
+                            </button>
+                        </form>
+                    )}
+                </div>
+            </div>
         </div>
     );
 };

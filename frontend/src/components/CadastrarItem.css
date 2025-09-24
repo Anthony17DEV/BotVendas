@@ -1,88 +1,89 @@
-body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(to bottom, #7e22ce, #312e81);
-    color: #fff;
-  }
-  
-  .cadastrar-container {
+.cadastrar-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     padding: 2rem;
-  }
-  
-  .cadastrar-container h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
+    background-color: var(--cor-fundo-body, #0f172a); 
+}
+
+.cadastrar-card {
+    width: 100%;
+    max-width: 800px; 
+    padding: 2.5rem;
+    background-color: var(--cor-fundo-container, #1e293b);
+    border: 1px solid var(--cor-borda, #475569);
+    border-radius: var(--raio-borda, 8px);
+}
+
+.cadastrar-card h2 {
     text-align: center;
-  }
-  
-  .cadastrar-card {
-    background-color: rgba(255, 255, 255, 0.05);
-    padding: 2rem;
-    border-radius: 10px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 500px;
-  }
-  
-  .cadastrar-card input[type="text"],
-  .cadastrar-card input[type="number"],
-  .cadastrar-card input[type="file"] {
-    width: 100%;
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    border: none;
-    border-radius: 6px;
-    background-color: #fff;
-    color: #000;
-    font-size: 1rem;
-  }
-  
-  .btn-verde {
-    width: 100%;
-    padding: 0.8rem;
-    background-color: #22c55e;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    color: var(--cor-texto-titulo, #f8fafc);
+    font-size: 1.75rem;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 1.5rem;
+    color: var(--cor-texto-titulo, #f8fafc);
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--cor-texto-label, #94a3b8);
+    font-weight: 500;
+}
+
+.form-input-file {
+    font-size: 0.9rem;
+    color: var(--cor-texto-label, #94a3b8);
+}
+
+.form-input-file::file-selector-button {
+    margin-right: 1rem;
+    border: 1px solid var(--cor-borda, #475569);
+    padding: 0.6rem 1rem;
+    border-radius: var(--raio-borda, 8px);
+    background-color: var(--cor-fundo-input, #334155);
+    color: var(--cor-texto-corpo, #cbd5e1);
     cursor: pointer;
-    margin-top: 1rem;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-verde:hover {
-    background-color: #16a34a;
-  }
-  
-  .btn-voltar {
+    transition: background-color 0.2s ease;
+}
+
+.form-input-file::file-selector-button:hover {
+    background-color: var(--cor-borda, #475569);
+}
+
+.button-link-voltar {
     margin-top: 1.5rem;
-    background-color: #3b82f6;
-    padding: 0.7rem 1.2rem;
+    background: none;
     border: none;
-    border-radius: 6px;
-    font-weight: bold;
-    color: #fff;
+    color: var(--cor-texto-label, #94a3b8);
     cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-voltar:hover {
-    background-color: #2563eb;
-  }
-  
-  @media screen and (max-width: 600px) {
-    .cadastrar-card {
-      padding: 1.5rem;
-    }
-  
-    .cadastrar-container h2 {
-      font-size: 1.5rem;
-    }
-  }
+    font-size: 0.9rem;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.button-link-voltar:hover {
+    color: var(--cor-primaria, #38bdf8);
+}
