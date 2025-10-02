@@ -2,18 +2,19 @@ import { authService } from './authService';
 
 const API_URL = process.env.REACT_APP_API_URL;
 
+/**
+ * Função auxiliar centralizada para todas as chamadas da API.
+ * - Anexa o token de autenticação automaticamente.
+ * - Trata erros de resposta da API de forma padronizada.
+ */
 const apiFetch = async (endpoint, options = {}) => {
     const { body, ...customOptions } = options;
     const token = authService.getToken();
-
-    const headers = {
-        ...customOptions.headers,
-    };
+    const headers = { ...customOptions.headers };
 
     if (token) {
         headers['Authorization'] = `Bearer ${token}`;
     }
-
     if (body && !(body instanceof FormData)) {
         headers['Content-Type'] = 'application/json';
     }
@@ -25,10 +26,9 @@ const apiFetch = async (endpoint, options = {}) => {
     });
 
     if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
-        throw new Error(errorData.message || `Erro ${response.status}`);
+        const errorData = await response.json().catch(() => ({ message: `Erro de servidor com status ${response.status}` }));
+        throw new Error(errorData.message);
     }
-
     return response.json();
 };
 
@@ -40,6 +40,10 @@ const apiService = {
     }),
 
     // Recovery
+    requestPasswordReset: (email) => apiFetch('/recovery/request-reset', {
+        method: 'POST',
+        body: { email }
+    }),
     resetPassword: (token, novaSenha) => apiFetch('/recovery/reset-password', {
         method: 'POST',
         body: { token, novaSenha }
@@ -71,41 +75,12 @@ const apiService = {
     deleteEstoqueItem: (itemId) => apiFetch(`/estoque/${itemId}`, {
         method: 'DELETE'
     }),
-    getPedidos: async () => {
-        const res = await fetch(`${API_URL}/pedidos`, {
-            headers: { 'Authorization': `Bearer ${getToken()}` }
-        });
-        if (!res.ok) throw new Error('Falha ao carregar os pedidos');
-        return res.json();
-    },
-    updatePedidoStatus: async (pedidoId, status, motivoCancelamento) => {
-        const res = await fetch(`${API_URL}/pedidos/${pedidoId}/status`, {
-            method: 'PATCH', 
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${getToken()}`
-            },
-            body: JSON.stringify({ status, motivo_cancelamento: motivoCancelamento })
-        });
 
-        if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.message || 'Erro ao atualizar o status do pedido');
-        }
-        return res.json();
-    },
-    requestPasswordReset: async (email) => {
-        const res = await fetch(`${API_URL}/recovery/request-reset`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email })
-        });
-
-        if (!res.ok) {
-            throw new Error('Falha na comunicação com o servidor');
-        }
-        return res.json();
-    }
+    getPedidos: () => apiFetch('/pedidos'),
+    updatePedidoStatus: (id, status, motivo) => apiFetch(`/pedidos/${id}/status`, {
+        method: 'PATCH',
+        body: { status, motivo_cancelamento: motivo }
+    }),
 };
 
 export default apiService;

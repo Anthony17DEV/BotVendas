@@ -1,6 +1,6 @@
 const { centralDb, getTenantPool } = require('../config/db');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
-const crypto = require('crypto'); 
+const crypto = require('crypto');
 
 exports.createPedido = async (pedidoData) => {
     const { cliente, itens, total, numeroLoja, ...resto } = pedidoData;
@@ -19,7 +19,7 @@ exports.createPedido = async (pedidoData) => {
         codigo_pedido,
         cliente.nome,
         cliente.telefone,
-        JSON.stringify(itens), 
+        JSON.stringify(itens),
         total,
         resto.tipoEntrega,
         JSON.stringify(resto.endereco),
@@ -37,7 +37,7 @@ exports.getAllPedidos = async (banco_dados) => {
 
 exports.updatePedidoStatus = async (banco_dados, pedidoId, novoStatus, motivo) => {
     const pool = getTenantPool(banco_dados);
-    const connection = await pool.getConnection(); 
+    const connection = await pool.getConnection();
     await connection.beginTransaction();
 
     try {
@@ -51,7 +51,7 @@ exports.updatePedidoStatus = async (banco_dados, pedidoId, novoStatus, motivo) =
 
         if (novoStatus === 'Confirmado' && statusAnterior === 'Pendente') {
             for (const item of itens) {
-                const quantidadePedido = item.quantidade || 1; 
+                const quantidadePedido = item.quantidade || 1;
                 await connection.query('UPDATE estoque SET quantidade = quantidade - ? WHERE id = ?', [quantidadePedido, item.id]);
             }
         } else if (novoStatus === 'Cancelado' && (statusAnterior === 'Confirmado' || statusAnterior === 'Em Preparo')) {

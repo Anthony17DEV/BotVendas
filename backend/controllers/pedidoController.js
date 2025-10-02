@@ -1,3 +1,4 @@
+// backend/controllers/pedidoController.js
 const pedidoService = require('../services/pedidoService');
 
 exports.createPedido = async (req, res) => {
@@ -13,16 +14,14 @@ exports.createPedido = async (req, res) => {
 exports.getAllPedidos = async (req, res) => {
     try {
         const { banco_dados } = req.user;
-
         if (!banco_dados) {
-            return res.status(400).json({ success: false, message: 'Identificação da empresa não encontrada.' });
+            throw new Error("banco_dados não encontrado no token do usuário.");
         }
-        
         const pedidos = await pedidoService.getAllPedidos(banco_dados);
         res.status(200).json({ success: true, data: pedidos });
     } catch (error) {
         console.error('❌ Erro no controller ao listar pedidos:', error);
-        res.status(500).json({ success: false, message: error.message });
+        res.status(500).json({ success: false, message: "Não foi possível carregar os pedidos." });
     }
 };
 
@@ -32,8 +31,8 @@ exports.updatePedidoStatus = async (req, res) => {
         const { id } = req.params;
         const { status, motivo_cancelamento } = req.body;
 
-        if (!banco_dados || !id || !status) {
-            return res.status(400).json({ success: false, message: 'Dados obrigatórios faltando.' });
+        if (!id || !status) {
+            return res.status(400).json({ success: false, message: 'Dados obrigatórios faltando (ID do pedido e Status).' });
         }
         
         await pedidoService.updatePedidoStatus(banco_dados, id, status, motivo_cancelamento);
