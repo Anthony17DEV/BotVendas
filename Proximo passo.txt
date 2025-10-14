@@ -1,0 +1,81 @@
+Agora que o backend está rodando corretamente e o cadastro de empresas está funcionando, vamos planejar os **próximos passos** do seu projeto. Aqui estão algumas opções do que podemos focar agora:
+
+---
+
+## **📌 Próximos Passos**
+
+Fazer o painel do cliente onde ele pode criar o estoque e ver as outras coisas
+
+### ** Criar um painel para visualizar os dados**
+Agora que temos os bancos de dados criados para cada empresa, precisamos de um **painel administrativo** para visualizar os dados de cada empresa.
+
+🔹 **O que adicionar no painel?**
+   - [ ] Listagem de todas as empresas
+   - [ ] Botão para entrar no banco de cada empresa e ver seus clientes/pedidos
+   - [ ] Gráficos para mostrar métricas importantes (quantidade de clientes, vendas, etc.)
+
+---
+
+### **3️⃣ Criar integração com o bot**
+Se o seu objetivo final é conectar esses dados com um bot (WhatsApp, Telegram, etc.), precisaremos de uma API para buscar e enviar informações para os usuários.
+
+🔹 **Passos para integrar com o bot:**
+   - [ ] Criar uma API que permita o bot consultar informações do banco de dados
+   - [ ] Criar um sistema de autenticação para evitar acessos não autorizados
+   - [ ] Definir quais informações o bot pode acessar (exemplo: listar estoque, criar pedidos, consultar clientes)
+
+---
+
+### **4️⃣ Melhorias na segurança**
+Agora que estamos lidando com múltiplos bancos de dados, precisamos garantir que **apenas usuários autorizados** possam acessar as informações das suas empresas.
+
+🔹 **Medidas de segurança importantes:**
+   - [ ] Criar autenticação com **JWT** para acesso à API
+   - [ ] Proteger as rotas para garantir que cada empresa só pode acessar seus próprios dados
+   - [ ] Criar um sistema de permissões (diferenciar administradores e funcionários)
+
+---
+
+## **📌 O que você quer focar agora?**
+🎯 **Você prefere começar pela API, painel administrativo, integração com o bot ou segurança?**  
+
+Diz aí o que faz mais sentido pra você, que eu te ajudo a construir! 🚀🔥
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import RecuperarSenha from './components/RecuperarSenha';
+
+const App = () => {
+    return (
+        <Router>
+            <div>
+                <h1>Testando Rotas - RecuperarSenha</h1>
+                <Routes>
+                    <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+                </Routes>
+            </div>
+        </Router>
+    );
+};
+
+export default App;
+
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AdminDashboard from './components/AdminDashboard';
+
+const App = () => {
+    return (
+        <Router>
+            <div>
+                <h1>Testando Rotas - AdminDashboard</h1>
+                <Routes>
+                    <Route path="/" element={<AdminDashboard />} />
+                </Routes>
+            </div>
+        </Router>
+    );
+};
+
+export default App;

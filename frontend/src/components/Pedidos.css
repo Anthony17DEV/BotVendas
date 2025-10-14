@@ -1,0 +1,131 @@
+.container-pedidos {
+    padding: 2rem;
+    min-height: 100vh;
+    background-color: var(--cor-fundo-body, #0f172a);
+}
+
+.pedidos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.container-tabela {
+    width: 100%;
+    overflow-x: auto;
+    background-color: var(--cor-fundo-container, #1e293b);
+    border-radius: var(--raio-borda, 8px);
+    border: 1px solid var(--cor-borda, #475569);
+    padding: 1rem;
+}
+
+.tabela-pedidos {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--cor-texto-corpo, #cbd5e1);
+}
+
+.tabela-pedidos th,
+.tabela-pedidos td {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.tabela-pedidos th {
+    background-color: var(--cor-fundo-input, #334155);
+    color: var(--cor-texto-titulo, #f8fafc);
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.tabela-pedidos tbody tr {
+    border-bottom: 1px solid var(--cor-borda, #475569);
+    transition: background-color 0.2s ease;
+}
+
+.tabela-pedidos tbody tr:last-child {
+    border-bottom: none;
+}
+
+.tabela-pedidos tbody tr:hover {
+    background-color: var(--cor-fundo-input, #334155);
+}
+
+.tabela-pedidos td {
+    font-size: 0.9rem;
+}
+
+.tabela-pedidos td[colspan] {
+    text-align: center;
+    padding: 3rem;
+    color: var(--cor-texto-label, #94a3b8);
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+.status-pendente { background-color: #f59e0b; color: #1e293b; }
+.status-confirmado { background-color: var(--cor-sucesso, #22c55e); color: #fff; }
+.status-preparo { background-color: var(--cor-primaria, #38bdf8); color: #1e293b; }
+.status-entregue { background-color: var(--cor-borda, #475569); color: #fff; }
+.status-cancelado { background-color: var(--cor-erro, #ef4444); color: #fff; }
+.status-default { background-color: #64748b; color: #fff; }
+
+.acoes-tabela { display: flex; gap: 0.75rem; }
+.botao-acao.confirmar { background-color: var(--cor-sucesso, #22c55e); }
+.botao-acao.cancelar { background-color: var(--cor-erro, #ef4444); }
+
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.modal-content {
+    background-color: var(--cor-fundo-container, #1e293b);
+    padding: 2rem;
+    border-radius: var(--raio-borda, 8px);
+    width: 90%;
+    max-width: 600px;
+    border: 1px solid var(--cor-borda, #475569);
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--cor-borda, #475569);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    color: var(--cor-texto-titulo, #f8fafc);
+}
+.modal-close-button {
+    background: none; border: none; font-size: 1.5rem; color: var(--cor-texto-label); cursor: pointer;
+}
+.lista-itens-modal {
+    list-style: none; padding: 0; margin-top: 0.5rem;
+}
+.lista-itens-modal li {
+    padding: 0.5rem 0; border-bottom: 1px dashed var(--cor-borda);
+}
+.lista-itens-modal li span {
+    float: right; font-weight: 600;
+}
+.total-modal {
+    text-align: right; font-size: 1.2rem; font-weight: bold; margin-top: 1rem; color: var(--cor-texto-titulo);
+}
+.modal-footer {
+    display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;
+}

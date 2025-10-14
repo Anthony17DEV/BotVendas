@@ -1,0 +1,59 @@
+## ✅ **1. Códigos para inicializar o sistema**
+Sempre que quiser rodar o sistema, siga estes passos no terminal:
+
+### **1️⃣ Iniciar o backend (Node.js)**
+1. Acesse a pasta do backend:
+   ```bash
+   cd backend
+   ```
+2. Inicie o servidor:
+   ```bash
+   node server.js
+   ```
+   Se quiser rodar automaticamente com recarga ao salvar arquivos, use:
+   ```bash
+   npx nodemon server.js
+   ```
+
+---
+
+### **2️⃣ Iniciar o frontend (React)**
+1. Acesse a pasta do frontend:
+   ```bash
+   cd frontend
+   ```
+2. Rode o projeto React:
+   ```bash
+   npm start
+   ```
+
+---
+
+### **3️⃣ Se precisar reinstalar as dependências**
+Se mudar de máquina ou precisar reconfigurar o ambiente:
+```bash
+cd backend
+npm install  # Instala as dependências do backend
+cd ../frontend
+npm install  # Instala as dependências do frontend
+```
+
+---
+
+## ✅ **2. Arquivos que você deve compartilhar para acompanhamento**
+Para alguém te ajudar, eles precisam dos **arquivos principais do backend e frontend**. Aqui está a lista dos arquivos que você pode enviar:
+
+### 📂 **Arquivos do Backend**
+- `backend/server.js` – Inicia o servidor Express.
+- `backend/config/db.js` – Configura o banco de dados MySQL.
+- `backend/routes/empresas.js` – Gerencia a criação e listagem das empresas.
+- `backend/package.json` – Contém as dependências do backend.
+
+### 📂 **Arquivos do Frontend**
+- `frontend/src/App.js` – Arquivo principal que chama o painel administrativo.
+- `frontend/src/components/AdminDashboard.jsx` – Tela onde as empresas são cadastradas e listadas.
+- `frontend/src/index.js` – Arquivo de entrada do React.
+- `frontend/package.json` – Contém as dependências do frontend.
+- `frontend/public/index.html` – Estrutura básica do React.
+
+---

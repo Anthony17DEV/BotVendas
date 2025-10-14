@@ -1,0 +1,272 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+    --cor-fundo-body: #0f172a; 
+    --cor-fundo-container: #1e293b; 
+    --cor-fundo-input: #334155; 
+    
+    --cor-primaria: #38bdf8; 
+    --cor-primaria-hover: #7dd3fc; 
+
+    --cor-texto-titulo: #f8fafc; 
+    --cor-texto-corpo: #cbd5e1; 
+    --cor-texto-label: #94a3b8; 
+
+    --cor-borda: #475569; 
+    --cor-borda-foco: var(--cor-primaria);
+
+    --cor-sucesso: #22c55e; 
+    --cor-erro: #ef4444;   
+
+    --sombra-foco: 0 0 0 3px rgba(56, 189, 248, 0.3);
+    --raio-borda: 8px;
+    --font-principal: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--cor-fundo-body);
+    font-family: var(--font-principal);
+    color: var(--cor-texto-corpo);
+    margin: 0;
+    padding: 2rem;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 2rem 2.5rem;
+    background-color: var(--cor-fundo-container);
+    border-radius: var(--raio-borda);
+    border: 1px solid var(--cor-borda);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: var(--cor-texto-titulo);
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1.5rem;
+    color: var(--cor-texto-titulo);
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 0.75rem;
+}
+
+.empresa-form fieldset {
+    border: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.empresa-form legend {
+    display: none; 
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.grid-col-span-2 {
+    grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+    .grid-col-span-2 {
+        grid-column: span 1;
+    }
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--cor-texto-label);
+    margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    font-size: 1rem;
+    color: var(--cor-texto-corpo);
+    background-color: var(--cor-fundo-input);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--cor-texto-label);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--cor-borda-foco);
+    box-shadow: var(--sombra-foco);
+}
+
+.form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--cor-texto-corpo);
+    cursor: pointer;
+    background-color: var(--cor-fundo-input);
+    padding: 0.75rem 1rem;
+    border-radius: var(--raio-borda);
+    border: 1px solid var(--cor-borda);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.checkbox-label:hover {
+    border-color: var(--cor-primaria);
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none; 
+}
+
+.checkbox-label::before {
+    content: '';
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--cor-borda);
+    border-radius: 4px;
+    background-color: var(--cor-fundo-container);
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"]:checked + ::before {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.criar-empresa {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.button-submit {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.875rem 1.5rem;
+    background-color: var(--cor-primaria);
+    color: var(--cor-fundo-body);
+    font-weight: 600;
+    border-radius: var(--raio-borda);
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+}
+
+.button-submit:hover {
+    background-color: var(--cor-primaria-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.2);
+}
+
+.button-submit:disabled {
+    background-color: var(--cor-borda);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.empresa-list {
+    margin-top: 3rem;
+    border-top: 1px solid var(--cor-borda);
+    padding-top: 1rem;
+}
+
+.empresa-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.empresa-list li {
+    background-color: var(--cor-fundo-container);
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-borda);
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.empresa-list li:hover {
+    transform: translateY(-2px);
+    border-color: var(--cor-primaria);
+}
+
+.empresa-list li strong {
+    color: var(--cor-texto-titulo);
+    font-weight: 500;
+}
+
+.empresa-list li span {
+    color: var(--cor-primaria);
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 500;
+    background-color: var(--cor-fundo-input);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.notification {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--raio-borda);
+    color: #fff;
+    text-align: center;
+    font-weight: 500;
+}
+
+.notification.success {
+    background-color: var(--cor-sucesso);
+}
+
+.notification.error {
+    background-color: var(--cor-erro);
+}
