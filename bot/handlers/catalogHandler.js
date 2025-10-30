@@ -8,7 +8,9 @@ function formatCatalogMessage(products, page) {
     let response = `🛍️ *Catálogo de Produtos (página ${page}):*\n\n`;
     products.forEach((p, i) => {
         const preco = parseFloat(p.preco || 0).toFixed(2);
-        response += `*${i + 1}.* ${p.nome}\n💰 *Preço:* R$ ${preco}\n📦 *Estoque:* ${p.quantidade ?? 'N/A'}\n\n`;
+        response += `*${i + 1}.* ${p.nome} (${p.marca || 'Marca N/A'})\n`;
+        response += `🧵 *Tamanho:* ${p.tamanho || '-'} | 🎨 *Cor:* ${p.cor || '-'}\n`;
+        response += `💰 *Preço:* R$ ${preco}\n📦 *Estoque:* ${p.quantidade ?? 'N/A'}\n\n`;
     });
     response += '_Digite *quero 1*, *quero 2*, etc. para adicionar ao carrinho._\n';
     response += '_Digite *mais* para ver a próxima página._\n';
@@ -18,9 +20,9 @@ function formatCatalogMessage(products, page) {
 
 exports.showCatalog = async (client, from) => {
     try {
-        const stock = await apiService.getStoreStock(state.storeData.data.id);
+        const stock = await apiService.getStoreStock(state.storeData.id);
         if (!stock || stock.length === 0) {
-            await client.sendText(from, '📦 Nenhum produto cadastrado no momento.');
+            await client.sendMessage(from, '📦 Nenhum produto cadastrado no momento.');
             return;
         }
         
@@ -29,10 +31,10 @@ exports.showCatalog = async (client, from) => {
         
         const productsToShow = stock.slice(0, ITEMS_PER_PAGE);
         const response = formatCatalogMessage(productsToShow, 1);
-        await client.sendText(from, response);
+        await client.sendMessage(from, response);
     } catch (error) {
         console.error('Erro ao buscar catálogo:', error);
-        await client.sendText(from, '❌ Ocorreu um erro ao buscar os produtos.');
+        await client.sendMessage(from, '❌ Ocorreu um erro ao buscar os produtos.');
     }
 };
 
@@ -47,20 +49,20 @@ exports.handleCatalogInteraction = async (client, message) => {
         const productsToShow = catalogState.filtered.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
         if (productsToShow.length === 0) {
-            await client.sendText(from, '🚫 Não há mais produtos para mostrar.');
+            await client.sendMessage(from, '🚫 Não há mais produtos para mostrar.');
             return;
         }
 
         catalogState.page = nextPage;
         const response = formatCatalogMessage(productsToShow, nextPage);
-        await client.sendText(from, response);
+        await client.sendMessage(from, response);
         return;
     }
 
     if (text === 'voltar') {
         delete state.userStates[from];
         delete state.catalogStates[from];
-        await client.sendText(from, '↩️ Saindo do catálogo. Digite *oi* para ver o menu.');
+        await client.sendMessage(from, '↩️ Saindo do catálogo. Digite *oi* para ver o menu.');
         return;
     }
 
@@ -69,6 +71,7 @@ exports.handleCatalogInteraction = async (client, message) => {
         return;
     }
 
+    // Se não for nenhum comando, trata como filtro
     const filteredProducts = catalogState.products.filter(p => 
         Object.values(p).some(val => 
             String(val).toLowerCase().includes(text)
@@ -76,7 +79,7 @@ exports.handleCatalogInteraction = async (client, message) => {
     );
 
     if (filteredProducts.length === 0) {
-        await client.sendText(from, `🔍 Nenhum produto encontrado com o termo: "${text}".`);
+        await client.sendMessage(from, `🔍 Nenhum produto encontrado com o termo: "${text}".`);
         return;
     }
     
@@ -85,5 +88,5 @@ exports.handleCatalogInteraction = async (client, message) => {
     
     const productsToShow = filteredProducts.slice(0, ITEMS_PER_PAGE);
     const response = formatCatalogMessage(productsToShow, 1);
-    await client.sendText(from, `🔎 Resultados para "${text}":\n\n` + response);
+    await client.sendMessage(from, `🔎 Resultados para "${text}":\n\n` + response);
 };

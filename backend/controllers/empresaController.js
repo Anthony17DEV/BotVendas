@@ -38,8 +38,12 @@ exports.getEmpresaByWhatsapp = async (req, res) => {
 exports.getEstoqueByEmpresaId = async (req, res) => {
     try {
         const { idEmpresa } = req.params;
+        if (!idEmpresa) {
+            return res.status(400).json({ success: false, message: "ID da empresa não informado." });
+        }
+        
         const estoque = await empresaService.getEstoqueByEmpresaId(idEmpresa);
-        res.status(200).json({ success: true, data: estoque });
+        res.status(200).json(estoque); 
     } catch (error) {
         console.error("❌ ERRO NO CONTROLLER AO BUSCAR ESTOQUE:", error);
         res.status(500).json({ success: false, message: error.message || "Erro interno no servidor." });

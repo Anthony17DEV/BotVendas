@@ -20,7 +20,7 @@ console.log('✅ Carregando rotas da API...');
 app.use('/api/auth', authRoutes);
 app.use('/api/recovery', recoveryRoutes);
 app.use('/api/dashboard', authMiddleware, dashboardRoutes);
-app.use('/api/pedidos', authMiddleware, pedidoRoutes); 
+app.use('/api/pedidos', pedidoRoutes);
 app.use('/api/estoque', authMiddleware, estoqueRoutes);
 app.use('/api/empresas', empresaRoutes);
 console.log('👍 Todas as rotas foram carregadas com sucesso!');

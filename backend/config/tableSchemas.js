@@ -13,19 +13,20 @@ const schemas = {
     pedidos: `
         CREATE TABLE IF NOT EXISTS pedidos (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            codigo_pedido VARCHAR(20) UNIQUE NOT NULL, -- Um código mais amigável para o cliente (ex: #PED1023)
+            codigo_pedido VARCHAR(20) UNIQUE NOT NULL,
             nome_cliente VARCHAR(255) NOT NULL,
             telefone_cliente VARCHAR(20),
-            itens JSON NOT NULL, -- Usar JSON é mais flexível para guardar os produtos do carrinho
+            itens JSON NOT NULL,
             subtotal DECIMAL(10,2) NOT NULL,
             taxa_entrega DECIMAL(10,2) DEFAULT 0.00,
             desconto DECIMAL(10,2) DEFAULT 0.00,
             total DECIMAL(10,2) NOT NULL,
             status ENUM('Pendente', 'Confirmado', 'Em Preparo', 'Pronto para Retirada', 'A Caminho', 'Entregue', 'Cancelado') DEFAULT 'Pendente',
             tipo_entrega ENUM('entrega', 'retirada') NOT NULL,
-            endereco_entrega TEXT, -- Pode ser um JSON com rua, número, bairro, etc.
+            endereco_entrega TEXT,
             forma_pagamento VARCHAR(50),
-            observacao TEXT, -- Observações do cliente (ex: "sem cebola")
+            motivo_cancelamento TEXT NULL DEFAULT NULL,
+            observacao TEXT,
             data_pedido TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     `,

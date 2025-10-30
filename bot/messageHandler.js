@@ -5,7 +5,8 @@ const catalogHandler = require('./handlers/catalogHandler');
 const cartHandler = require('./handlers/cartHandler');
 const checkoutHandler = require('./handlers/checkoutHandler');
 
-exports.handleMessage = async (client) => {
+exports.handleMessage = async (client, message) => {
+    
     if (!state.storeData) {
         try {
             const host = client.info;
@@ -21,20 +22,20 @@ exports.handleMessage = async (client) => {
         }
     }
     
+    if (!message || !message.body || message.fromMe) return; 
+
     const from = message.from;
     const userState = state.userStates[from];
 
     try {
-        if (message.body && !message.fromMe) { 
-            if (userState === 'adding_to_cart') {
-                await cartHandler.handleQuantityResponse(client, message);
-            } else if (userState === 'checkout') {
-                await checkoutHandler.handleCheckoutStep(client, message);
-            } else if (userState === 'catalog') {
-                await catalogHandler.handleCatalogInteraction(client, message);
-            } else {
-                await commandHandler.handleCommand(client, message);
-            }
+        if (userState === 'adding_to_cart') {
+            await cartHandler.handleQuantityResponse(client, message);
+        } else if (userState === 'checkout') {
+            await checkoutHandler.handleCheckoutStep(client, message);
+        } else if (userState === 'catalog') {
+            await catalogHandler.handleCatalogInteraction(client, message);
+        } else {
+            await commandHandler.handleCommand(client, message);
         }
     } catch (error) {
         console.error(`❌ Erro ao processar mensagem de ${from}:`, error);

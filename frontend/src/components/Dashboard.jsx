@@ -84,7 +84,7 @@ const Dashboard = () => {
                 <div className="indicador-card">
                     <FiClipboard className="indicador-icon" />
                     <h4>Pedidos Hoje</h4>
-                    <p>--</p> 
+                    <p>{dashboardData?.pedidosHoje ?? '0'}</p> 
                 </div>
             </div>
 
